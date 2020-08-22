@@ -2,9 +2,9 @@ use Mix.Config
 
 # Configure your database
 config :maxdac_blog, MaxdacBlog.Repo,
-  username: "root",
-  password: "",
-  database: "maxdac_blog_dev",
+  username: "BLOGGER",
+  password: "maxdac-blog",
+  database: "maxdac_blog",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
