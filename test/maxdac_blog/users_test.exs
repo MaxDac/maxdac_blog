@@ -6,8 +6,8 @@ defmodule MaxdacBlog.UsersTest do
   describe "users" do
     alias MaxdacBlog.Users.User
 
-    @valid_attrs %{avatar: "some avatar", description: "some description", email: "some email", password_hash: "some password_hash", username: "some username"}
-    @update_attrs %{avatar: "some updated avatar", description: "some updated description", email: "some updated email", password_hash: "some updated password_hash", username: "some updated username"}
+    @valid_attrs %{avatar: "some avatar", description: "some description", email: "some email", password: "some password_hash", username: "some username"}
+    @update_attrs %{avatar: "some updated avatar", description: "some updated description", email: "some updated email", password: "some_updated_pass", username: "some_updated_user"}
     @invalid_attrs %{avatar: nil, description: nil, email: nil, password_hash: nil, username: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -21,12 +21,12 @@ defmodule MaxdacBlog.UsersTest do
 
     test "list_users/0 returns all users" do
       user = user_fixture()
-      assert Users.list_users() == [user]
+      assert Users.list_users() == [%{user | password: nil}]
     end
 
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
-      assert Users.get_user!(user.id) == user
+      assert Users.get_user!(user.id) == %{user | password: nil}
     end
 
     test "create_user/1 with valid data creates a user" do
@@ -34,7 +34,6 @@ defmodule MaxdacBlog.UsersTest do
       assert user.avatar == "some avatar"
       assert user.description == "some description"
       assert user.email == "some email"
-      assert user.password_hash == "some password_hash"
       assert user.username == "some username"
     end
 
@@ -48,14 +47,13 @@ defmodule MaxdacBlog.UsersTest do
       assert user.avatar == "some updated avatar"
       assert user.description == "some updated description"
       assert user.email == "some updated email"
-      assert user.password_hash == "some updated password_hash"
-      assert user.username == "some updated username"
+      assert user.username == "some_updated_user"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Users.update_user(user, @invalid_attrs)
-      assert user == Users.get_user!(user.id)
+      assert %{user | password: nil} == Users.get_user!(user.id)
     end
 
     test "delete_user/1 deletes the user" do
@@ -67,6 +65,32 @@ defmodule MaxdacBlog.UsersTest do
     test "change_user/1 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Users.change_user(user)
+    end
+  end
+
+  describe "Users validation" do
+    @validation_attrs %{avatar: "some avatar", description: "some description", email: "some email", password: "some password_hash", username: "some username"}
+
+    test "user with a username less than 5 characters is refused" do
+      faulty_name = "four"
+
+      {:error, %Ecto.Changeset{ errors: [username: user_error] }} =
+        %{username: faulty_name}
+        |> Enum.into(@validation_attrs)
+        |> Users.create_user
+
+      assert not is_nil(user_error)
+    end
+
+    test "user with a username of more than 20 characters is refused" do
+      faulty_name = "this_is_a_username_with_more_than_20_characters"
+
+      {:error, %Ecto.Changeset{ errors: [username: user_error] }} =
+        %{username: faulty_name}
+        |> Enum.into(@validation_attrs)
+        |> Users.create_user
+
+      assert not is_nil(user_error)
     end
   end
 end
