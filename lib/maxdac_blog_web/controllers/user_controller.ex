@@ -1,6 +1,10 @@
 defmodule MaxdacBlogWeb.UserController do
   use MaxdacBlogWeb, :controller
 
+  plug :authenticate when action in [:index, :show]
+
+  import Plug.Conn
+
   alias MaxdacBlog.Users
   alias MaxdacBlog.Users.User
 
@@ -58,5 +62,21 @@ defmodule MaxdacBlogWeb.UserController do
     conn
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: Routes.user_path(conn, :index))
+  end
+
+  @doc """
+  This function authenticate a user, determining whether the connection
+  has a session or not.
+  """
+  @spec authenticate(%Plug.Conn{}, %{}) :: %Plug.Conn{}
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access this page.")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
   end
 end
