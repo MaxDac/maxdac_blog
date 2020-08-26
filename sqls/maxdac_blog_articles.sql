@@ -1,0 +1,1 @@
+INSERT INTO maxdac_blog.articles (id, title, inserted_at, updated_at) VALUES (1, 'Elixir "monad" pipe operator', '2020-08-24 17:48:50', '2020-08-24 17:48:50');
