@@ -11,6 +11,7 @@ defmodule MaxdacBlog.Users.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :username, :string
+    field :admin, :boolean
 
     timestamps()
   end
@@ -32,7 +33,7 @@ defmodule MaxdacBlog.Users.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:username, :password, :email, :avatar, :description])
-    |> validate_required([:username, :password, :email, :avatar, :description])
+    |> validate_required([:username, :password, :email])
     |> validate_length(:username, min: 5, max: 20)
     |> validate_length(:password, min: 5, max: 20)
     |> put_pass_hash()

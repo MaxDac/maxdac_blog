@@ -1,0 +1,4 @@
+<div>
+    <h3><%= @section.title %></h3>
+    <%= raw @section.content %>
+</div>

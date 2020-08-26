@@ -5,6 +5,8 @@ defmodule MaxdacBlog.Articles.Article do
   schema "articles" do
     field :title, :string
 
+    field :sections, :any, virtual: true
+
     timestamps()
   end
 

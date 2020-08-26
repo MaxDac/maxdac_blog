@@ -1,0 +1,25 @@
+<h1>Admin section</h1>
+
+<%# <%= link "Update index",
+         to: Routes.admin_path(@conn, :principal, article.id),
+         class: "nav-link" %>
+
+<%# <%= link "Update portfolio",
+         to: Routes.admin_path(@conn, :portfolio, article.id),
+         class: "nav-link" %>
+
+<%# <%= link "Update biography",
+         to: Routes.admin_path(@conn, :biography, article.id),
+         class: "nav-link" %>
+
+<h3>Modify articles</h3>
+
+<ul class="list-group">
+    <%= for article <- @articles do %>
+        <li class="list-group-item">
+            <%= link article.title,
+                     to: Routes.admin_path(@conn, :edit_article, article.id),
+                     class: "nav-link" %>
+        </li>
+    <% end %>
+</ul>

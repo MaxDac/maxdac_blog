@@ -2,9 +2,9 @@ defmodule MaxdacBlog.ArticlesTest do
   use MaxdacBlog.DataCase
 
   alias MaxdacBlog.Articles
+  alias MaxdacBlog.Articles.Article
 
   describe "articles" do
-    alias MaxdacBlog.Articles.Article
 
     @valid_attrs %{title: "some title"}
     @update_attrs %{title: "some updated title"}
@@ -26,7 +26,7 @@ defmodule MaxdacBlog.ArticlesTest do
 
     test "get_article!/1 returns the article with given id" do
       article = article_fixture()
-      assert Articles.get_article!(article.id) == article
+      assert %{Articles.get_article!(article.id) | sections: nil} == article
     end
 
     test "create_article/1 with valid data creates a article" do
@@ -47,7 +47,7 @@ defmodule MaxdacBlog.ArticlesTest do
     test "update_article/2 with invalid data returns error changeset" do
       article = article_fixture()
       assert {:error, %Ecto.Changeset{}} = Articles.update_article(article, @invalid_attrs)
-      assert article == Articles.get_article!(article.id)
+      assert article == %{Articles.get_article!(article.id) | sections: nil}
     end
 
     test "delete_article/1 deletes the article" do
@@ -81,21 +81,23 @@ defmodule MaxdacBlog.ArticlesTest do
         |> Map.put(:article_id, article.id)
         |> Articles.create_section()
 
-      section
+      {section, article}
     end
 
     test "list_sections/0 returns all sections" do
-      section = section_fixture()
+      {section, _} = section_fixture()
       assert Articles.list_sections() == [section]
     end
 
     test "get_section!/1 returns the section with given id" do
-      section = section_fixture()
+      {section, _} = section_fixture()
       assert Articles.get_section!(section.id) == section
     end
 
     test "create_section/1 with valid data creates a section" do
-      assert {:ok, %Section{} = section} = Articles.create_section(@valid_attrs)
+      {:ok, article} = Articles.create_article(@article_attrs)
+      assert {:ok, %Section{} = section} =
+        Articles.create_section(@valid_attrs |> Map.put(:article_id, article.id))
       assert section.content == "some content"
       assert section.title == "some title"
     end
@@ -105,27 +107,46 @@ defmodule MaxdacBlog.ArticlesTest do
     end
 
     test "update_section/2 with valid data updates the section" do
-      section = section_fixture()
+      {section, _} = section_fixture()
       assert {:ok, %Section{} = section} = Articles.update_section(section, @update_attrs)
       assert section.content == "some updated content"
       assert section.title == "some updated title"
     end
 
     test "update_section/2 with invalid data returns error changeset" do
-      section = section_fixture()
+      {section, _} = section_fixture()
       assert {:error, %Ecto.Changeset{}} = Articles.update_section(section, @invalid_attrs)
       assert section == Articles.get_section!(section.id)
     end
 
     test "delete_section/1 deletes the section" do
-      section = section_fixture()
+      {section, _} = section_fixture()
       assert {:ok, %Section{}} = Articles.delete_section(section)
       assert_raise Ecto.NoResultsError, fn -> Articles.get_section!(section.id) end
     end
 
     test "change_section/1 returns a section changeset" do
-      section = section_fixture()
+      {section, _} = section_fixture()
       assert %Ecto.Changeset{} = Articles.change_section(section)
+    end
+
+    test "list_article_sections/1 returns all sections for the created article" do
+      {section, article} = section_fixture()
+      assert Articles.list_article_sections(article.id) == [section]
+    end
+
+    test "list_article_sections/1 does not return other articles' sections" do
+      {:ok, previous_article} =
+        Articles.create_article(%{"title" => "Other title"})
+
+      {section, article} = section_fixture()
+        assert Articles.list_article_sections(previous_article.id) == []
+    end
+
+    test "get_article!/1 returns a list of sections" do
+      {section, %Article{id: article_id}} = section_fixture()
+      article = Articles.get_article!(article_id)
+      assert article.sections == [section]
     end
   end
 end

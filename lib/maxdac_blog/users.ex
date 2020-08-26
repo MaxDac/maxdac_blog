@@ -102,13 +102,13 @@ defmodule MaxdacBlog.Users do
     User.changeset(user, %{})
   end
 
-  defp get_user_by_email!(email) do
+  defp get_user_by_email(email) do
     (from u in User, where: u.email == ^email)
-    |> Repo.one!()
+    |> Repo.one()
   end
 
   def authenticate(email, password) do
-    user = get_user_by_email!(email)
+    user = get_user_by_email(email)
 
     cond do
       user && Pbkdf2.verify_pass(password, user.password_hash) ->

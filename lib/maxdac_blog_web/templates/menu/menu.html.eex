@@ -1,24 +1,67 @@
+<%
+  [f | _] = if @conn.path_info != [] do @conn.path_info else ["none"] end
+
+  is_admin = @conn.assigns && @conn.assigns.current_user && @conn.assigns.current_user.admin
+%>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">MaxDac Blog</a>
+  <a class="navbar-brand" href="/">MaxDac Blog</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarColor02">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Articles<span class="sr-only">(current)</span></a>
+      <li class="nav-item <%= if f == "articles" do %>active<% end %>">
+        <a class="nav-link" href="/articles">
+          Articles
+          <%= if f == "articles" do %><span class="sr-only">(current)</span><% end %>
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Portfolio</a>
+      <li class="nav-item <%= if f == "portfolio" do %>active<% end %>">
+        <a class="nav-link" href="/portfolio">
+          Portfolio
+          <%= if f == "portfolio" do %><span class="sr-only">(current)</span><% end %>
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Biography</a>
+      <li class="nav-item <%= if f == "biography" do %>active<% end %>">
+        <a class="nav-link" href="/biography">
+          Biography
+          <%= if f == "biography" do %><span class="sr-only">(current)</span><% end %>
+        </a>
       </li>
+      <%= if is_admin do %>
+      <li class="nav-item <%= if f == "admin" do %>active<% end %>">
+        <a class="nav-link" href="/admin">
+          Admin
+          <%= if f == "admin" do %><span class="sr-only">(current)</span><% end %>
+        </a>
+      </li>
+      <% end %>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
+      <input class="form-control mr-sm-2 bg-dark text-white" type="text" placeholder="Search">
       <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
     </form>
+    <ul class="navbar-nav">
+      &nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;
+      <%= if @current_user do %>
+      <li class="nav-item">
+        <%= link "Logout",
+                 to: Routes.session_path(@conn, :delete, @current_user),
+                 method: "delete",
+                 class: "nav-link" %>
+      </li>
+      <% else %>
+      <li class="nav-item">
+        <a class="nav-link" href="/sessions/new">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/new">Join</a>
+      </li>
+      <% end %>
+    </ul>
   </div>
 </nav>

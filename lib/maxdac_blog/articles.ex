@@ -22,22 +22,6 @@ defmodule MaxdacBlog.Articles do
   end
 
   @doc """
-  Gets a single article.
-
-  Raises `Ecto.NoResultsError` if the Article does not exist.
-
-  ## Examples
-
-      iex> get_article!(123)
-      %Article{}
-
-      iex> get_article!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_article!(id), do: Repo.get!(Article, id)
-
-  @doc """
   Creates a article.
 
   ## Examples
@@ -115,6 +99,19 @@ defmodule MaxdacBlog.Articles do
   """
   def list_sections do
     Repo.all(Section)
+  end
+
+  @doc """
+  Lists all the article sections.
+  """
+  @spec list_article_sections(String.t()) :: [%Article{}]
+  def list_article_sections(article_id) do
+    with query <-
+      from s in Section,
+      where: s.article_id == ^article_id,
+      order_by: s.order do
+        Repo.all(query)
+    end
   end
 
   @doc """
@@ -196,5 +193,26 @@ defmodule MaxdacBlog.Articles do
   """
   def change_section(%Section{} = section) do
     Section.changeset(section, %{})
+  end
+
+  @doc """
+  Gets a single article.
+
+  Raises `Ecto.NoResultsError` if the Article does not exist.
+
+  ## Examples
+
+      iex> get_article!(123)
+      %Article{}
+
+      iex> get_article!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_article!(id) do
+    with sections <- list_article_sections(id),
+         article  <- %{Repo.get!(Article, id) | sections: sections} do
+      article
+    end
   end
 end

@@ -5,27 +5,25 @@
     </div>
   <% end %>
 
-  <%= label f, :avatar %>
-  <%= textarea f, :avatar %>
-  <%= error_tag f, :avatar %>
+  <div class="form-group">
+    <%= label f, :email %>
+    <%= text_input f, :email, class: "form-control bg-dark text-white", aria_describedby: "email" %>
+    <%= error_tag f, :email %>
+  </div>
 
-  <%= label f, :description %>
-  <%= textarea f, :description %>
-  <%= error_tag f, :description %>
+  <div class="form-group">
+    <%= label f, :username %>
+    <%= text_input f, :username, class: "form-control bg-dark text-white", aria_describedby: "username" %>
+    <%= error_tag f, :username %>
+  </div>
 
-  <%= label f, :email %>
-  <%= text_input f, :email %>
-  <%= error_tag f, :email %>
+  <div class="form-group">
+    <%= label f, :password %>
+    <%= password_input f, :password, class: "form-control bg-dark text-white", aria_describedby: "password" %>
+    <%= error_tag f, :password %>
+  </div>
 
-  <%= label f, :password_hash %>
-  <%= text_input f, :password_hash %>
-  <%= error_tag f, :password_hash %>
-
-  <%= label f, :username %>
-  <%= text_input f, :username %>
-  <%= error_tag f, :username %>
-
-  <div>
-    <%= submit "Save" %>
+  <div class="form-group submit-form-group">
+    <%= submit "Save", class: "form-control bg-dark text-white default-button" %>
   </div>
 <% end %>

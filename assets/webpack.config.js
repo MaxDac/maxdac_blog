@@ -13,11 +13,11 @@ module.exports = (env, options) => ({
     ]
   },
   entry: {
-    './js/app.js': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
+    app: glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
   },
   output: {
-    filename: 'app.js',
-    path: path.resolve(__dirname, '../priv/static/js')
+    filename: './js/[name].js',//filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, '../priv/static')
   },
   module: {
     rules: [
@@ -35,7 +35,11 @@ module.exports = (env, options) => ({
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: '../css/app.css' }),
-    new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
+    new MiniCssExtractPlugin({ filename: './css/app.css' }),
+    new CopyWebpackPlugin(
+      [
+        { from: 'static/', to: './' }
+      ]
+    )
   ]
 });

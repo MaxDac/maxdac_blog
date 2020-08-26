@@ -1,0 +1,28 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :title %>
+    <%= text_input f, :title, class: "form-control bg-dark text-white", aria_describedby: "title" %>
+    <%= error_tag f, :title %>
+  </div>
+
+  <%= hidden_input f, :content, class: "form-control bg-dark text-white", id: "editor-value" %>
+
+  <div id="editor"></div>
+
+  <script type="text/javascript">
+      window.onload = function() {
+        const value = document.getElementById("editor-value").value;
+        const editor = Editor().initialize("editor", "editor-value", value);
+      }
+  </script>
+
+  <div class="form-group submit-form-group">
+    <%= submit "Save", class: "form-control bg-dark text-white default-button" %>
+  </div>
+<% end %>

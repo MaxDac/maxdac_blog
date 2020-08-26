@@ -1,0 +1,37 @@
+<h1>Articles</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 60%">
+                    Name
+                </th>
+                <th scope="col">
+                    Inserted at
+                </th>
+                <th scope="col">
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <%= for article <- @articles do %>
+            <tr>
+                <td>
+                    <%= article.title %>
+                </td>
+                <td>
+                    <%= article.inserted_at %>
+                </td>
+                <td>
+                  <a href="<%= Routes.article_path(@conn, :show, article.id) %>">
+                    <svg class="bi bi-chevron-right" width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"/>
+                    </svg>
+                  </a>
+                </td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+</div>

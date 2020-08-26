@@ -1,0 +1,11 @@
+<h1>New section</h1>
+
+<%
+    %Plug.Conn{params: %{"article_id" => article_id}} = @conn
+%>
+
+<div class="default-form">
+    <%= render "section_form.html", Map.put(assigns, :action, Routes.admin_path(@conn, :create_section, article_id)) %>
+</div>
+
+<span><%= link "Back", to: Routes.admin_path(@conn, :index) %></span>

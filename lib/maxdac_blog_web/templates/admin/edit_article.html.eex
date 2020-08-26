@@ -1,0 +1,19 @@
+<h1>Modifying article<%= @article.title %></h1>
+
+<h3>Select section</h3>
+
+<ul class="list-group">
+    <%= for section <- @article.sections do %>
+        <li class="list-group-item">
+            <%= link section.title,
+                     to: Routes.admin_path(@conn, :edit_section, section.id),
+                     class: "nav-link" %>
+        </li>
+    <% end %>
+
+    <li class="list-group-item">
+        <%= link "Add new section",
+                 to: Routes.admin_path(@conn, :new_section, @article.id),
+                 class: "nav-link" %>
+    </li>
+</ul>

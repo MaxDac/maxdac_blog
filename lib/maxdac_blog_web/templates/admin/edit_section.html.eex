@@ -1,0 +1,5 @@
+<h1>Modifying section <%= @section.title %></h1>
+
+<%= render "section_form.html", Map.put(assigns, :action, Routes.admin_path(@conn, :update_section, @section)) %>
+
+<span><%= link "Back", to: Routes.admin_path(@conn, :index) %></span>

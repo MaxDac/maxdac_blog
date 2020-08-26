@@ -27,6 +27,10 @@ select {
   width: auto;
 }
 
+.main-container {
+  padding: 10px;
+}
+
 /* Alerts and form errors */
 .alert {
   padding: 15px;
@@ -78,6 +82,38 @@ select {
 .phx-logo img {
   width: auto;
   display: block;
+}
+
+.default-form {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.default-button {
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+.submit-form-group {
+  padding: 20px;
+}
+
+.article-image-content {
+  float: left;
+  margin: 10px;
+}
+
+.article-text-content {
+  display: inline;
+}
+
+.avatar-image {
+  width: 300px;
+  height: auto;
+}
+
+.index-content {
+  padding-top: 20px;
 }
 
 /* Headers */
